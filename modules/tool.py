@@ -1,0 +1,3 @@
+class tool:
+
+	name = ""
