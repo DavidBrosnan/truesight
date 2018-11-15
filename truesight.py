@@ -1,6 +1,6 @@
 import os
 import subprocess
-import args
+import sys
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 
@@ -32,10 +32,6 @@ Tools required:
 
 #define a machine object?
 
-ctf_machine = "test"
-ctf_ip = "10.10.10.102"
-
-base_folder = "/root/code/python/tmp/" + ctf_machine + "/scans/"
 
 def build_dir(path):
 	try:
@@ -44,11 +40,15 @@ def build_dir(path):
 		pass
 		#print "Dir already exists"
 
-def call_process(command, outfile_path):
+def call_process(command, outfile_path, if_wait=False):
 	print command
 	
 	outfile = open(outfile_path,"w")
-	subprocess.Popen(command.split(" "), stdout=outfile, stderr=outfile)
+	process = subprocess.Popen(command.split(" "), stdout=outfile, stderr=outfile)
+
+	if if_wait:
+		print "WAITING PROCESS..."
+		process.wait()
 
 def tool_execute(name, *args):
 	pass
@@ -60,9 +60,7 @@ def tool_execute(name, *args):
 	#zone transfer
 
 
-
-
-def http_runbook(ports):
+def http_runbook(base_folder, ports):
 
 	local_log = ""
 
@@ -113,41 +111,49 @@ def http_runbook(ports):
 
 		#add -x gobuster for file types based on webserver
 
+def run(ctf_machine, ctf_ip):
+
+	base_folder = "/root/htb/ACTIVE/" + ctf_machine + "/scans/"
+
+	build_dir(base_folder + "nmap")
+
+	#subprocess.call(["nmap","-sV","-p", "20-81","-T4","-oA", base_folder + ctf_machine + "/scans/nmap/" + ctf_machine, ctf_ip])
+	command_log = base_folder + "nmap/truesight_command_log.txt"
+	call_process("nmap -sV -p- -T4 -oA " + base_folder + "nmap/" + ctf_machine + " " + ctf_ip, command_log,True)
+
+	#e = ET.parse("/root/htb/FINISHED/hawk/scans/nmap/hawk.xml")
+	e = ET.parse(base_folder + "nmap/" + ctf_machine + ".xml")
+	root = e.getroot()
+
+	ports = root.find("host").find("ports")
+
+	services = {}
+	#so every key has a default value of a list
+	services = defaultdict(lambda: [], services)
+
+	for port in ports.iter("port"):
+		service_name = port.find("service").attrib['name']
+		portid = port.attrib['portid']
+
+		services[service_name].append(portid)
 
 
-build_dir(base_folder + "nmap")
-
-#subprocess.call(["nmap","-sV","-p", "20-81","-T4","-oA", base_folder + ctf_machine + "/scans/nmap/" + ctf_machine, ctf_ip])
-command_log = base_folder + "nmap/truesight_command_log.txt"
-call_process("nmap -sV -p 20-81 -T4 -oA " + base_folder + "scans/nmap/" + ctf_machine + " " + ctf_ip, command_log)
-
-e = ET.parse("/root/htb/FINISHED/hawk/scans/nmap/hawk.xml")
-root = e.getroot()
-
-ports = root.find("host").find("ports")
-
-services = {}
-#so every key has a default value of a list
-services = defaultdict(lambda: [], services)
-
-for port in ports.iter("port"):
-	service_name = port.find("service").attrib['name']
-	portid = port.attrib['portid']
-
-	services[service_name].append(portid)
-
-
-print services["http"]
-http_runbook(services["http"])
+	print services["http"]
+	http_runbook(base_folder, services["http"])
 
 	#for service in port.find("service"):
-		
-
 
 
 #for service in scaninfo.iter("services"):
 #	print service
 
+
+if __name__ == "__main__":
+
+	#ctf_machine = "test"
+	#ctf_ip = "10.10.10.102"
+	#base_folder = "/root/code/python/tmp/" + ctf_machine + "/scans/"
+	run(sys.argv[1],sys.argv[2])
 
 
 
