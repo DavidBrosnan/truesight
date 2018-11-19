@@ -74,8 +74,8 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 	for port in ports:
 		#run nikto
 
-		local_log = base_folder + "nikto/" + ctf_machine + ".txt"
-		command_log = base_folder + "nikto/command_log.txt"
+		local_log = base_folder + "nikto/" + port + "/" + ctf_machine + ".txt"
+		command_log = base_folder + "nikto/" + port + "/command_log.txt"
 
 		#build_dir(base_folder + "nikto")
 		build_dir(base_folder + "nikto/" + port)
@@ -83,8 +83,8 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 
 		#run gobuster
 
-		local_log = base_folder + "gobuster/" + ctf_machine + ".txt"
-		command_log = base_folder + "gobuster/command_log.txt"
+		local_log = base_folder + "gobuster/" + port + "/" + ctf_machine + ".txt"
+		command_log = base_folder + "gobuster/" + port + "/command_log.txt"
 
 		#avoid devices that observe user-agent filtering
 		user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
@@ -100,8 +100,8 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 		#grab robots.txt AND see which ones respond
 		#show all html comments for all 200's in the directory bruteforce/
 		#Use Wget for this?
-		local_log = base_folder + "wget/" + ctf_machine + ".txt"
-		command_log = base_folder + "wget/command_log.txt"
+		local_log = base_folder + "wget/" port + "/" + ctf_machine + ".txt"
+		command_log = base_folder + "wget/" + port + "/command_log.txt"
 
 		#build_dir(base_folder + "wget")
 		build_dir(base_folder + "wget/" + port)
