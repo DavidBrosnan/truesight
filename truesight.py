@@ -60,7 +60,7 @@ def tool_execute(name, *args):
 	#zone transfer
 
 
-def http_runbook(base_folder, ports):
+def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 
 	local_log = ""
 
@@ -119,7 +119,7 @@ def run(ctf_machine, ctf_ip):
 
 	#subprocess.call(["nmap","-sV","-p", "20-81","-T4","-oA", base_folder + ctf_machine + "/scans/nmap/" + ctf_machine, ctf_ip])
 	command_log = base_folder + "nmap/truesight_command_log.txt"
-	call_process("nmap -sV -p- -T4 -oA " + base_folder + "nmap/" + ctf_machine + " " + ctf_ip, command_log,True)
+	call_process("nmap -sV -sC -p- -T4 -oA " + base_folder + "nmap/" + ctf_machine + " " + ctf_ip, command_log,True)
 
 	#e = ET.parse("/root/htb/FINISHED/hawk/scans/nmap/hawk.xml")
 	e = ET.parse(base_folder + "nmap/" + ctf_machine + ".xml")
@@ -139,7 +139,7 @@ def run(ctf_machine, ctf_ip):
 
 
 	print services["http"]
-	http_runbook(base_folder, services["http"])
+	http_runbook(base_folder, ctf_machine, ctf_ip, services["http"])
 
 	#for service in port.find("service"):
 
