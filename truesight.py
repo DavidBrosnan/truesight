@@ -105,7 +105,7 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 
 		#build_dir(base_folder + "wget")
 		build_dir(base_folder + "wget/" + port)
-		call_process("wget --recursive --level 3 " + ctf_ip, command_log)
+		call_process("wget --recursive --level 3 -P " + base_folder + "wget/" + " " + ctf_ip, command_log)
 
 
 
