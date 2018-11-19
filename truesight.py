@@ -100,12 +100,12 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 		#grab robots.txt AND see which ones respond
 		#show all html comments for all 200's in the directory bruteforce/
 		#Use Wget for this?
-		local_log = base_folder + "wget/" port + "/" + ctf_machine + ".txt"
+		local_log = base_folder + "wget/" + port + "/" + ctf_machine + ".txt"
 		command_log = base_folder + "wget/" + port + "/command_log.txt"
 
 		#build_dir(base_folder + "wget")
 		build_dir(base_folder + "wget/" + port)
-		call_process("wget --recursive --level 3 -P " + base_folder + "wget/" + " " + ctf_ip, command_log)
+		call_process("wget --recursive --level 3 -o " + local_log + " -P " + base_folder + "wget/" + " " + ctf_ip, command_log)
 
 
 
