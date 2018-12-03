@@ -14,9 +14,6 @@ Tools required:
 
 
 """
-
-#base_folder = "/root/htb/ACTIVE"
-
 #eventually read from a config file instead of here
 
 #check if nmap logs already exist
@@ -105,7 +102,7 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 
 		#build_dir(base_folder + "wget")
 		build_dir(base_folder + "wget/" + port)
-		call_process("wget --recursive --level 3 -o " + local_log + " -P " + base_folder + "wget/" + " " + ctf_ip, command_log)
+		call_process("wget --recursive --level 3 -o " + local_log + " -P " + base_folder + "wget/" + port + " " + ctf_ip, command_log)
 
 
 
@@ -150,9 +147,6 @@ def run(ctf_machine, ctf_ip):
 
 if __name__ == "__main__":
 
-	#ctf_machine = "test"
-	#ctf_ip = "10.10.10.102"
-	#base_folder = "/root/code/python/tmp/" + ctf_machine + "/scans/"
 	run(sys.argv[1],sys.argv[2])
 
 
