@@ -1,4 +1,5 @@
 import os
+import errno
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -33,10 +34,13 @@ Tools required:
 def build_dir(path):
 	try:
 		os.makedirs(path)
-	except Exception as e:
-		pass
-		#print "Dir already exists"
-
+	except OSError as e:
+		if e.errno == errno.EEXIST:
+			pass
+			#print "Directory " + path + " already exists"
+		else:
+			raise
+	
 def call_process(command, outfile_path, if_wait=False):
 	print command
 	
