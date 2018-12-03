@@ -63,9 +63,10 @@ def http_runbook(base_folder, ctf_machine, ctf_ip, ports):
 
 	#maybe tool_process function since theyre pretty similar
 
-	build_dir(base_folder + "nikto")
-	build_dir(base_folder + "gobuster")
-	build_dir(base_folder + "wget")
+	tools = ["nikto","gobuster","wget"]
+
+	for tool in tools:
+		build_dir(base_folder + tool)
 
 
 	for port in ports:
