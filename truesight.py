@@ -48,6 +48,8 @@ def main(target_machine, target_ip):
 	scanner = toolbox.Nmap()
 	services = scanner.execute()
 
+	return
+
 	#print services["http"]
 	http_runbook(services["http"])
 
