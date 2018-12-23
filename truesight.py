@@ -41,14 +41,12 @@ def http_runbook(ports):
 
 def main(target_machine, target_ip):
 	
-	os_inf.BASE_FOLDER = "/root/tmp/ts/" + target_machine + "/scans/"
+	os_inf.BASE_FOLDER = "/root/htb/ACTIVE/" + target_machine + "/scans/"
 	os_inf.TARGET_NAME = target_machine
 	os_inf.TARGET_IP = target_ip
 	
 	scanner = toolbox.Nmap()
 	services = scanner.execute()
-
-	return
 
 	#print services["http"]
 	http_runbook(services["http"])

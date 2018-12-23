@@ -2,6 +2,8 @@ import os
 import errno
 import subprocess
 
+#Add a process to check for PIDs spawned by this script and optionally dont finish until all PIDS closed.
+
 BASE_FOLDER = ""
 TARGET_NAME = ""
 TARGET_IP = ""
@@ -27,6 +29,8 @@ def call_process(command, path, outfile, if_wait=False):
 	if if_wait:
 		print "WAITING PROCESS..."
 		process.wait()
+
+
 	
 
 
