@@ -4,9 +4,9 @@ import subprocess
 import sys
 import ConfigParser
 
-from truesight.modules import os_inf
-from truesight.modules import tool
-from truesight.modules import toolbox
+from modules import os_inf
+from modules import tool
+from modules import toolbox
 
 """
 Tools required:

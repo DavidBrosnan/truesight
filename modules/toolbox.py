@@ -1,5 +1,5 @@
-from lib.modules import tool
-from lib.modules import os_inf
+from modules import tool
+from modules import os_inf
 
 import xml.etree.ElementTree as ET
 from collections import defaultdict
