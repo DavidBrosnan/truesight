@@ -11,13 +11,19 @@ class Nmap(tool.Tool):
 		self.name = "nmap"
 		self.setup()
 
-	def execute(self):
+	def execute(self, nmap_import):
 		
 		#os_inf.call_process("nmap -sV -sC -p- -T4 -oA " + os_inf.BASE_FOLDER + "nmap/" + os_inf.TARGET_NAME + " " + os_inf.TARGET_IP, self.command_log,True)
 
-		os_inf.call_process("nmap -sV -sC -p- -T4 -oA " + os_inf.BASE_FOLDER + "nmap/" + os_inf.TARGET_NAME + " " + os_inf.TARGET_IP, os_inf.BASE_FOLDER + "nmap/", self.command_out,True)
 
-		e = ET.parse(os_inf.BASE_FOLDER + "nmap/" + os_inf.TARGET_NAME + ".xml")
+		if nmap_import is None:
+			os_inf.call_process("sudo nmap -sV -sC -p- -T4 -oA " + os_inf.BASE_FOLDER + "nmap/" + os_inf.TARGET_NAME + " " + os_inf.TARGET_IP, os_inf.BASE_FOLDER + "nmap/", self.command_out,True)
+			e = ET.parse(os_inf.BASE_FOLDER + "nmap/" + os_inf.TARGET_NAME + ".xml")
+		
+		else:
+			e = ET.parse(nmap_import)	
+
+
 		root = e.getroot()
 
 		ports = root.find("host").find("ports")
@@ -28,10 +34,14 @@ class Nmap(tool.Tool):
 		services = defaultdict(lambda: [], services)
 
 		for port in ports.iter("port"):
-			service_name = port.find("service").attrib['name']
-			portid = port.attrib['portid']
 
-			services[service_name].append(portid)
+			service = port.find("service")
+
+			if service is not None:			
+				service_name = port.find("service").attrib['name']
+				portid = port.attrib['portid']
+
+				services[service_name].append(portid)
 
 		return services
 
@@ -58,7 +68,7 @@ class Nikto(tool.Tool):
 
 			port_path = self.dir_path + port + "/"
 
-			os_inf.call_process("nikto -host " + os_inf.TARGET_IP + " -port " + port + " -output " + port_path + self.tool_out, port_path, self.command_out)
+			os_inf.call_process("sudo nikto -host " + os_inf.TARGET_IP + " -port " + port + " -output " + port_path + self.tool_out, port_path, self.command_out)
 
 	def setup(self):
 		for port in self.ports:
@@ -83,7 +93,7 @@ class Gobuster(tool.Tool):
 		for port in self.ports:
 			port_path = self.dir_path + port + "/"
 
-			os_inf.call_process("gobuster -u http://" + os_inf.TARGET_IP + " -w " + wordlist + " -a \"" + user_agent + "\" -o " + port_path + self.tool_out, port_path, self.command_out)
+			os_inf.call_process("sudo gobuster dir -u http://" + os_inf.TARGET_IP + ":" + port + " -w " + wordlist + " -a \"" + user_agent + "\" -o " + port_path + self.tool_out, port_path, self.command_out)
 
 	def setup(self):
 		#fix this to work with multiple ports
@@ -103,22 +113,25 @@ class Wget(tool.Tool):
 		self.setup()
 		#self.URI = 
 
+	#move this function up
+	def html_comments(self, port_path):
+		os_inf.call_process("grep \"password\" -r " + port_path + " -f " + port_path + "password_grep", port_path, self.command_out)
+
 	def execute(self):
 
 		for port in self.ports:
 			port_path = self.dir_path + port + "/"
-			os_inf.call_process("wget --recursive --level 3 -o " + port_path + self.tool_out + " -P " + port_path + " " + os_inf.TARGET_IP, port_path, self.command_out)
-			html_comments(port_path)
-			robots(port_path)
+			os_inf.call_process("sudo wget --recursive --level 3 -o " + port_path + self.tool_out + " -P " + port_path + " " + os_inf.TARGET_IP, port_path, self.command_out)
+			self.html_comments(port_path)
+			self.robots(port_path)
 
 	def setup(self):
 		#fix this to work with multiple ports
 		for port in self.ports:
 			os_inf.build_dir(os_inf.BASE_FOLDER + "wget/" + port)
 
-	def html_comments(self, port_path):
-		os_inf.call_process("grep \"password\" -r " + port_path + " -f " + port_path + "password_grep")
+
 
 	def robots(self, port_path):
 		#what if site has base url thats not root dir? can we detect that?
-		os_inf.call_process("wget -o " + port_path + self.tool_out + " -P " + port_path + " " + os_inf.TARGET_IP + "/robots.txt")
+		os_inf.call_process("sudo wget -o " + port_path + self.tool_out + " -P " + port_path + " " + os_inf.TARGET_IP + "/robots.txt", port_path, self.command_out)

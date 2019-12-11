@@ -2,10 +2,11 @@ import os
 import errno
 import subprocess
 import sys
+import ConfigParser
 
-from lib.modules import os_inf
-from lib.modules import tool
-from lib.modules import toolbox
+from truesight.modules import os_inf
+from truesight.modules import tool
+from truesight.modules import toolbox
 
 """
 Tools required:
@@ -39,14 +40,19 @@ def http_runbook(ports):
 
 	return
 
-def main(target_machine, target_ip):
+def main(target_machine, target_ip, nmap_file=None):
+
+	config = ConfigParser.ConfigParser()
+	config.read('config.ini')
+
+	base = config.get('Properties', 'base')
 	
-	os_inf.BASE_FOLDER = "/root/htb/ACTIVE/" + target_machine + "/scans/"
+	os_inf.BASE_FOLDER = base + target_machine + "/scans/"
 	os_inf.TARGET_NAME = target_machine
 	os_inf.TARGET_IP = target_ip
 	
 	scanner = toolbox.Nmap()
-	services = scanner.execute()
+	services = scanner.execute(nmap_file)
 
 	#print services["http"]
 	http_runbook(services["http"])
@@ -54,7 +60,10 @@ def main(target_machine, target_ip):
 
 if __name__ == "__main__":
 
-	main(sys.argv[1],sys.argv[2])
+	if len(sys.argv) > 3:
+			main(sys.argv[1],sys.argv[2],sys.argv[3])
+	else:
+		main(sys.argv[1],sys.argv[2])
 
 
 
