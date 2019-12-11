@@ -4,9 +4,13 @@ import subprocess
 import sys
 import ConfigParser
 
+
 from modules import os_inf
 from modules import tool
-from modules import toolbox
+#from modules import toolbox
+from tools import *
+#import tools
+
 
 """
 Tools required:
@@ -29,13 +33,13 @@ def http_runbook(ports):
 
 	local_log = ""
 
-	tools = []
+	toolbox = []
 
-	tools.append(toolbox.Nikto(ports))
-	tools.append(toolbox.Gobuster(ports))
-	tools.append(toolbox.Wget(ports))
+	toolbox.append(nikto.Nikto(ports))
+	toolbox.append(gobuster.Gobuster(ports))
+	toolbox.append(wget.Wget(ports))
 
-	for tool in tools:
+	for tool in toolbox:
 		tool.execute()
 
 	return
@@ -51,7 +55,7 @@ def main(target_machine, target_ip, nmap_file=None):
 	os_inf.TARGET_NAME = target_machine
 	os_inf.TARGET_IP = target_ip
 	
-	scanner = toolbox.Nmap()
+	scanner = nmap.Nmap()
 	services = scanner.execute(nmap_file)
 
 	#print services["http"]
