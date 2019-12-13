@@ -19,15 +19,15 @@ def build_dir(path):
 			raise
 
 def call_process(command, path, outfile, if_wait=False):
-	print command
+	print(command)
 	
 	outfile = open(path + "/" + outfile,"w")
 	process = subprocess.Popen(command.split(" "), stdout=outfile, stderr=outfile)
 
-	print "Process PID:  " + str(process.pid)
+	print("Process PID:  " + str(process.pid))
 
 	if if_wait:
-		print "WAITING PROCESS..."
+		print("WAITING PROCESS...")
 		process.wait()
 
 

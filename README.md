@@ -7,3 +7,6 @@ Initially meant for automating and creating a standard methodology for CTF chall
 - Introduce OOP to clean up tool integration process
 - Create more base runbooks such as ssh, dns, ftp, etc.
 - Create functionality to leverage specific tools rather than an all or nothing
+
+## Requirements
+pip3 install configparser

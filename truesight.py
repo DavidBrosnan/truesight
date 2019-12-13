@@ -2,7 +2,7 @@ import os
 import errno
 import subprocess
 import sys
-import ConfigParser
+import configparser
 
 
 from modules import os_inf
@@ -46,7 +46,7 @@ def http_runbook(ports):
 
 def main(target_machine, target_ip, nmap_file=None):
 
-	config = ConfigParser.ConfigParser()
+	config = configparser.ConfigParser()
 	config.read('config.ini')
 
 	base = config.get('Properties', 'base')
